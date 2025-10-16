@@ -14,6 +14,9 @@ dotenv.config();
 // Load environment variables
 
 
+console.log('MONGODB_URL:', process.env.MONGODB_URL);
+
+
 // Validate required environment variables
 const requiredEnvVars = ['SESSION_SECRET', 'MONGODB_URL'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
