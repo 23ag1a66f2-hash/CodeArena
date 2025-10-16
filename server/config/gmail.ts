@@ -1,37 +1,51 @@
 // Gmail API Configuration for Email Service
 
+// --- MODIFICATION START ---
+// The configuration now directly references environment variables.
+// If any of these are missing, the validation check below will stop the server.
+const GMAIL_CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+const GMAIL_CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+const GMAIL_REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
+const GMAIL_USER_EMAIL = process.env.GMAIL_USER_EMAIL;
+
+// Validate that all required Gmail environment variables are provided.
+if (!GMAIL_CLIENT_ID || !GMAIL_CLIENT_SECRET || !GMAIL_REFRESH_TOKEN || !GMAIL_USER_EMAIL) {
+  throw new Error(
+    'Missing required Gmail API environment variables. ' +
+    'Please ensure GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, and GMAIL_USER_EMAIL are set in your .env file.'
+  );
+}
+// --- MODIFICATION END ---
+
+
 export interface GmailAPIConfig {
-  clientId: string;
-  clientSecret: string;
-  refreshToken: string;
-  userEmail: string;
+  clientId: string;
+  clientSecret: string;
+  refreshToken: string;
+  userEmail: string;
 }
 
-export const gmailConfig = {
-  // Local Development (Gmail)
-  local: {
-    clientId: process.env.GMAIL_CLIENT_ID || '524898025855-g1n4oa8h1nu3mnc96c7aeotroilgi1bv.apps.googleusercontent.com',
-    clientSecret: process.env.GMAIL_CLIENT_SECRET || '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',
-    refreshToken: process.env.GMAIL_REFRESH_TOKEN || '1//040Hh7HnEhfKlCgYIARAAGAQSNwF-L9IrcLCow4qvS1PFfEYoyrLcBoFkhB_YjH39cPe2nMx-kWOKh_veNvpxUG08kU3IpYTdiM4',
-    userEmail: process.env.GMAIL_USER_EMAIL || 'codearena@gmail.com'
-  } as GmailAPIConfig,
+export const gmailConfig: GmailAPIConfig = {
+  clientId: GMAIL_CLIENT_ID,
+  clientSecret: GMAIL_CLIENT_SECRET,
+  refreshToken: GMAIL_REFRESH_TOKEN,
+  userEmail: GMAIL_USER_EMAIL
 };
 
-// Environment detection
+// --- MODIFICATION START ---
+// This function is now simplified, as there's only one configuration source.
 export const getCurrentGmailConfig = (): GmailAPIConfig => {
-  if (process.env.NODE_ENV === 'production') {
-    console.log('🚀 Production Environment Detected - Using Gmail API');
-    return gmailConfig.local;
-  } else {
-    console.log('🏠 Local Development Environment Detected - Using Gmail API');
-    return gmailConfig.local;
-  }
+  const env = process.env.NODE_ENV || 'development';
+  console.log(`🔧 Environment: ${env} - Loading Gmail API config from environment variables.`);
+  return gmailConfig;
 };
+// --- MODIFICATION END ---
+
 
 // Gmail API Scopes required for sending emails
 export const GMAIL_SCOPES = [
-  'https://www.googleapis.com/auth/gmail.send',
-  'https://www.googleapis.com/auth/gmail.compose'
+  'https://www.googleapis.com/auth/gmail.send',
+  'https://www.googleapis.com/auth/gmail.compose'
 ];
 
 // Gmail API discovery URL

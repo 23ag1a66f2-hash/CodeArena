@@ -26,27 +26,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup maintenance API routes
   setupMaintenanceRoutes(app);
 
-  // Public/problem-set routes
-  app.use('/api/problem-sets', problemSetsRouter);
+  // --- ADMIN ROUTES (GROUPED AND PRIORITIZED) ---
   app.use('/api/admin/problem-sets', problemSetsRouter);
-  // Alias: admin assignments use same problem set controller
-  app.use('/api/admin/assignments', problemSetsRouter);
-  // Admin analytics
-  app.use('/api/analytics', assignmentAnalyticsRoutes);
+  app.use('/api/admin/assignments', problemSetsRouter); // Alias
   app.use('/api/admin/version-history', versionHistoryRoutes);
+  app.use('/api/admin/contests', contestsRouter);
   app.use('/api/admin', adminRouter);
 
-  // Feature routers
+  // --- OTHER API ROUTES ---
+  app.use('/api/analytics', assignmentAnalyticsRoutes);
+  app.use('/api/problem-sets', problemSetsRouter);
   app.use('/api/problems', problemsRouter);
   app.use('/api/submissions', submissionsRouter);
   app.use('/api/courses', coursesRouter);
   app.use('/api/modules', modulesRouter);
   app.use('/api/users', usersRouter);
   app.use('/api/assignments', assignmentsRouter);
-
-  // Contests
   app.use('/api/contests', contestsRouter);
-  app.use('/api/admin/contests', contestsRouter);
 
   // Compatibility route: reset current user's course progress
   app.post('/api/courses/:id/reset-progress', protect as any, (async (req: AuthRequest, res: Response) => {
@@ -183,4 +179,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   return server;
-} 
+}

@@ -2,12 +2,16 @@
 const getApiUrl = (): string => {
   // First try environment variable
   if (import.meta.env.VITE_API_URL) {
+    // --- ADDED LOG ---
+    console.log("✅ API URL loaded from .env file");
     return import.meta.env.VITE_API_URL;
   }
   
   // Fallback for browser environment
   if (typeof window !== 'undefined') {
     const apiPort = import.meta.env.VITE_API_PORT || '3001';
+    // --- ADDED LOG ---
+    console.warn("⚠️ API URL not found in .env, falling back to dynamic URL.");
     return `${window.location.protocol}//${window.location.hostname}:${apiPort}`;
   }
   
@@ -18,11 +22,15 @@ const getApiUrl = (): string => {
 const getFrontendUrl = (): string => {
   // First try environment variable
   if (import.meta.env.VITE_FRONTEND_URL) {
+    // --- ADDED LOG ---
+    console.log("✅ Frontend URL loaded from .env file");
     return import.meta.env.VITE_FRONTEND_URL;
   }
   
   // Fallback for browser environment
   if (typeof window !== 'undefined') {
+    // --- ADDED LOG ---
+    console.warn("⚠️ Frontend URL not found in .env, falling back to window.location.origin.");
     return window.location.origin;
   }
   
@@ -33,17 +41,22 @@ const getFrontendUrl = (): string => {
 const getExecutionApiUrl = (): string => {
   // First try environment variable
   if (import.meta.env.VITE_EXECUTION_API_URL) {
+    // --- ADDED LOG ---
+    console.log("✅ Execution API URL loaded from .env file");
     return import.meta.env.VITE_EXECUTION_API_URL;
   }
   
   // Fallback for browser environment
   if (typeof window !== 'undefined') {
+    // --- ADDED LOG ---
+    console.warn("⚠️ Execution API URL not found in .env, falling back to dynamic URL.");
     return `${window.location.protocol}//${window.location.hostname}:3000`;
   }
   
   // Default fallback
   return 'http://localhost:3000';
 };
+
 
 // Main configuration object
 export const config = {
@@ -139,9 +152,9 @@ export const validateConfig = () => {
   return true;
 };
 
-// Development helpers
+// This block is already set up to log your config!
 if (config.debug.enabled) {
-  console.log('🔧 Client Configuration:', {
+  console.log('🔧 Client Configuration Summary:', {
     apiUrl: config.apiUrl,
     frontendUrl: config.frontendUrl,
     executionApiUrl: config.executionApiUrl,

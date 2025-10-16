@@ -2,16 +2,19 @@ import { MongoClient, Db, ReadPreferenceMode, WriteConcern } from 'mongodb';
 import { EventEmitter } from 'events';
 import mongoose from 'mongoose';
 
-// Validate that MONGODB_URL is provided
-if (!process.env.MONGODB_URL) {
+// Use the || operator to provide a hardcoded fallback for the MONGODB_URL.
+const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://CodeArena:raghavmail@codearena.vl1ishe.mongodb.net/?retryWrites=true&w=majority&appName=CodeArena";
+
+// --- MODIFICATION START ---
+// The original 'if' block would have thrown an error when the fallback URL was used.
+// This new check ensures that EITHER the environment variable OR the hardcoded string is present.
+if (!MONGODB_URL) {
   throw new Error(
-    'MONGODB_URL environment variable is required. Please set it in your .env file.\n' +
-    'Example: MONGODB_URL=mongodb://localhost:27017/codearena\n' +
-    'For Atlas: MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/codearena'
+    'MONGODB_URL is not set. Please define it in your .env file or hardcode it in db.ts.'
   );
 }
+// --- MODIFICATION END ---
 
-const MONGODB_URL = process.env.MONGODB_URL;
 
 // MongoDB connection options
 const MONGODB_OPTIONS = {
@@ -22,8 +25,8 @@ const MONGODB_OPTIONS = {
   minPoolSize: parseInt(process.env.DB_MIN_POOL_SIZE || '10'),
   retryWrites: true,
   retryReads: true,
-  writeConcern: { 
-    w: parseInt(process.env.DB_WRITE_CONCERN_W || '1'), 
+  writeConcern: {
+    w: parseInt(process.env.DB_WRITE_CONCERN_W || '1'),
     wtimeout: parseInt(process.env.DB_WRITE_CONCERN_TIMEOUT || '2500')
   },
   readPreference: (process.env.DB_READ_PREFERENCE || 'primary') as ReadPreferenceMode,
@@ -95,10 +98,11 @@ class DatabaseConnection extends EventEmitter {
       }
 
       this.isConnecting = true;
-      
+
       // Connect using Mongoose first
       console.log('[DB] Connecting to MongoDB with Mongoose...');
       console.log('[DB] Database URL:', MONGODB_URL.replace(/\/\/[^@]*@/, '//***:***@')); // Hide credentials in logs
+      console.log("Connecting to MongoDB with URL:", MONGODB_URL);
       
       await mongoose.connect(MONGODB_URL, {
         serverSelectionTimeoutMS: MONGODB_OPTIONS.serverSelectionTimeoutMS,
@@ -125,7 +129,7 @@ class DatabaseConnection extends EventEmitter {
       this.connectionPromise = new Promise(async (resolve, reject) => {
         try {
           console.log('[DB] Initializing MongoDB client connection...');
-          
+
           this.client = new MongoClient(MONGODB_URL, MONGODB_OPTIONS);
 
           // Connect to MongoDB
@@ -173,17 +177,17 @@ class DatabaseConnection extends EventEmitter {
       );
     }
   }
-  
+
   private async handleError(error: Error): Promise<void> {
     console.error('[DB] Handling MongoDB error:', error);
-    
+
     // Close the existing connection
     await this.close();
-    
+
     // Reset connection state
     this.isConnecting = false;
     this.connectionPromise = null;
-    
+
     // Emit error event
     this.emit('error', error);
   }
@@ -231,9 +235,9 @@ class DatabaseConnection extends EventEmitter {
       const latency = Date.now() - start;
       return { status: 'connected', latency };
     } catch (error) {
-      return { 
-        status: 'error', 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      return {
+        status: 'error',
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
@@ -248,7 +252,7 @@ export const getDb = (): Db => {
   try {
     const connection = DatabaseConnection.getInstance();
     const db = connection.getDb();
-    
+
     // Test the connection in background
     db.command({ ping: 1 }).catch(async (error) => {
       console.error('[DB] Database ping failed:', error);
@@ -259,7 +263,7 @@ export const getDb = (): Db => {
         console.error('[DB] Failed to reconnect:', reconnectError);
       }
     });
-    
+
     return db;
   } catch (error) {
     console.error('[DB] Error getting database connection:', error);
