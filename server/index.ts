@@ -11,6 +11,7 @@ import cors from "cors";
 import { Request, Response, NextFunction } from "express";
 import { activityLogger } from './middleware/activityLogger.js';
 import dotenv from "dotenv";
+import MongoStore from 'connect-mongo';
 dotenv.config();
 // Load environment variables
 
@@ -108,12 +109,16 @@ app.use(session({
   secret: config.sessionSecret,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URL,
+    collectionName: 'sessions' // Optional: name of the collection to store sessions
+  }),
   name: process.env.SESSION_NAME || 'codearena.sid',
   cookie: {
     secure: config.nodeEnv === 'production',
     httpOnly: true,
     maxAge: config.sessionMaxAge,
-    sameSite: config.nodeEnv === 'production' ? 'strict' : 'lax'
+    sameSite: config.nodeEnv === 'production' ? 'lax' : 'lax'
   }
 }));
 
