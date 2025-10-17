@@ -24,9 +24,9 @@ export interface ICourse {
   updatedAt: Date;
 }
 
-// Correctly define the document interface
-interface ICourseDocument extends ICourse, Document {
-  // Methods can be defined here if needed
+// FIX: Extend ICourse and an Omitted Document type to resolve the 'id' conflict.
+interface ICourseDocument extends ICourse, Omit<Document, 'id'> {
+  // Methods can be defined here
   incrementEnrollment(): Promise<this>;
   decrementEnrollment(): Promise<this>;
 }
