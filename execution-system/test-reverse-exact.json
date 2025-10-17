@@ -1,5 +1,0 @@
-{
-  "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nstring reverseString(string s) {\n    int left = 0, right = s.length() - 1;\n    while (left < right) {\n        swap(s[left], s[right]);\n        left++;\n        right--;\n    }\n    return s;\n}\n\nint main() {\n    string s;\n    getline(cin, s);\n    string result = reverseString(s);\n    cout << result << endl;\n    return 0;\n}",
-  "language": "cpp",
-  "input": "hello"
-} 

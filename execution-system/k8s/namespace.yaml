@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: codearena-execution
-  labels:
-    name: codearena-execution
-    app.kubernetes.io/name: codearena-execution
-    app.kubernetes.io/version: "1.0.0" 
