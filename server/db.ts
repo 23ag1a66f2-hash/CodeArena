@@ -1,6 +1,8 @@
 import { MongoClient, Db, ReadPreferenceMode, WriteConcern } from 'mongodb';
 import { EventEmitter } from 'events';
 import mongoose from 'mongoose';
+import 'dotenv/config';
+
 
 // Use the || operator to provide a hardcoded fallback for the MONGODB_URL.
 const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://CodeArena:raghavmail@codearena.vl1ishe.mongodb.net/?retryWrites=true&w=majority&appName=CodeArena";

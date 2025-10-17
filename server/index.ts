@@ -1,17 +1,22 @@
 import express from "express";
-import { registerRoutes } from "./appRouter";
-import { setupVite, serveStatic, log } from "./viteIntegration";
-import { connectToMongoDB, dbHealthCheck } from "./db";
-import { MaintenanceConfig } from "./models/MaintenanceConfig";
-import authRoutes from "./routes/auth";
+// FIX: Added .js extensions to all local/relative imports
+import { registerRoutes } from "./appRouter.js";
+import { setupVite, serveStatic, log } from "./viteIntegration.js";
+import { connectToMongoDB, dbHealthCheck } from "./db.js";
+import { MaintenanceConfig } from "./models/MaintenanceConfig.js";
+import authRoutes from "./routes/auth.js";
 import passport from "passport";
 import session from "express-session";
 import cors from "cors";
 import { Request, Response, NextFunction } from "express";
-import { activityLogger } from './middleware/activityLogger';
+import { activityLogger } from './middleware/activityLogger.js';
 import dotenv from "dotenv";
+import MongoStore from 'connect-mongo';
 dotenv.config();
 // Load environment variables
+
+
+console.log('MONGODB_URL:', process.env.MONGODB_URL);
 
 
 // Validate required environment variables
@@ -47,23 +52,34 @@ const config = {
 // Disable ETag to avoid 304 Not Modified responses on API
 app.set('etag', false);
 
-// CORS configuration
-const corsOrigins = config.corsOrigin.split(',').map(origin => origin.trim());
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (corsOrigins.includes(origin) || corsOrigins.includes('*')) {
-      return callback(null, true);
-    }
-    if (config.nodeEnv === 'development' && origin.includes('localhost')) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true, // --- FIX: This is now always true
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+// --- FIX: ROBUST CORS CONFIGURATION ---
+const allowedOrigins = [
+    'https://code-arena-taupe.vercel.app', // Your production frontend
+    'http://localhost:5000',               // For local development
+    'http://localhost:5173'                // Another common local dev port
+];
+
+const corsOptions = {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+        
+        // Check if the origin is in our whitelist
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
+
+app.use(cors(corsOptions));
+
+// Also, handle pre-flight requests for all routes
+app.options('*', cors(corsOptions));
 
 
 // Ensure API responses are never cached
@@ -93,12 +109,16 @@ app.use(session({
   secret: config.sessionSecret,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URL,
+    collectionName: 'sessions' // Optional: name of the collection to store sessions
+  }),
   name: process.env.SESSION_NAME || 'codearena.sid',
   cookie: {
     secure: config.nodeEnv === 'production',
     httpOnly: true,
     maxAge: config.sessionMaxAge,
-    sameSite: config.nodeEnv === 'production' ? 'strict' : 'lax'
+    sameSite: config.nodeEnv === 'production' ? 'lax' : 'lax'
   }
 }));
 
@@ -146,7 +166,7 @@ app.use('/api/auth', (req, res, next) => {
 app.use('/auth', authRoutes); // Backward compatibility
 
 // Activity logger
-app.use(activityLogger());
+app.use(activityLogger);
 
 // --- MAIN ASYNC BOOTSTRAP ---
 (async () => {
@@ -196,7 +216,8 @@ app.use(activityLogger());
     console.log('✅ MongoDB connected successfully');
 
     // Initialize maintenance mode configuration
-    const { initializeMaintenanceAfterDB } = await import('./middleware/maintenance');
+    // FIX: Added .js extension
+    const { initializeMaintenanceAfterDB } = await import('./middleware/maintenance.js');
     await initializeMaintenanceAfterDB();
     console.log('✅ Maintenance configuration initialized');
 

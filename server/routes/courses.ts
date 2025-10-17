@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { protect, requireAdmin } from '../middleware/auth';
+import { protect, requireAdmin } from '../middleware/auth.js';
 import {
   listCourses,
   createCourse,
@@ -14,8 +14,8 @@ import {
   getCourseProgress,
   getUserEnrollments,
   getUserCourses,
-} from '../controllers/coursesController';
-import { createModule } from '../controllers/modulesController';
+} from '../controllers/coursesController.js';
+import { createModule } from '../controllers/modulesController.js';
 
 const router = Router();
 

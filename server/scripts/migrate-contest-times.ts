@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Contest } from '../models/Contest';
+import { Contest } from '../models/Contest.js';
 
 async function migrateContestTimes() {
   try {

@@ -1,13 +1,13 @@
 // @ts-nocheck
 
 import { Router, Request, Response } from 'express';
-import { contestStorage } from '../services/contestStorage';
-import { executionServicePromise } from '../services/executionService';
-import { insertContestSchema, contestParticipantSchema, contestQuestionSchema } from '../shared-schema';
-import { protect } from '../middleware/auth';
-import type { AuthRequest } from '../middleware/auth';
+import { contestStorage } from '../services/contestStorage.js';
+import { executionServicePromise } from '../services/executionService.js';
+import { insertContestSchema, contestParticipantSchema, contestQuestionSchema } from '../shared-schema.js';
+import { protect } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
 import QRCode from 'qrcode';
-import { requireAdmin } from '../middleware/auth';
+import { requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 

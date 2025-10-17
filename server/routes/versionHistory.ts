@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { protect, requireAdmin, type AuthRequest } from '../middleware/auth';
-import { VersionHistory } from '../models/VersionHistory';
+import { protect, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { VersionHistory } from '../models/VersionHistory.js';
 
 const router = Router();
 

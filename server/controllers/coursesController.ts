@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
-import { storage } from '../storage';
-import { connectToMongoDB } from '../db';
+import type { AuthRequest } from '../middleware/auth.js';
+import { storage } from '../storage.js';
+import { connectToMongoDB } from '../db.js';
 import mongoose from 'mongoose';
-import { insertCourseSchema } from '../shared-schema';
-import { Course } from '../models/Course';
-import { CourseModule } from '../models/CourseModule';
-import { CourseEnrollment } from '../models/CourseEnrollment';
-import { User } from '../models/User';
+import { insertCourseSchema } from '../shared-schema.js';
+import { Course } from '../models/Course.js';
+import { CourseModule } from '../models/CourseModule.js';
+import { CourseEnrollment } from '../models/CourseEnrollment.js';
+import { User } from '../models/User.js';
 import QRCode from 'qrcode';
 import { z } from 'zod';
 

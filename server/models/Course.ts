@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ICourse {
   id: number;
@@ -19,16 +19,19 @@ export interface ICourse {
   rating?: number;
   enrollmentCount?: number;
   completionRate?: number;
+  allowDirectEnrollment?: boolean; // Add missing property
   createdAt: Date;
   updatedAt: Date;
 }
 
-interface ICourseDocument extends Omit<ICourse, 'id'>, Document {
-  _id: mongoose.Types.ObjectId;
-  id: number;
+// FIX: Extend ICourse and an Omitted Document type to resolve the 'id' conflict.
+interface ICourseDocument extends ICourse, Omit<Document, 'id'> {
+  // Methods can be defined here
+  incrementEnrollment(): Promise<this>;
+  decrementEnrollment(): Promise<this>;
 }
 
-const courseSchema = new mongoose.Schema<ICourseDocument>({
+const courseSchema = new Schema<ICourseDocument>({
   id: {
     type: Number,
     required: true,
@@ -58,29 +61,12 @@ const courseSchema = new mongoose.Schema<ICourseDocument>({
     type: Number,
     min: [0, 'Estimated hours cannot be negative'],
   },
-  prerequisites: [{
-    type: String,
-    trim: true,
-  }],
-  learningObjectives: [{
-    type: String,
-    trim: true,
-  }],
-  problems: [{
-    type: Number,
-  }],
-  modules: [{
-    type: Number,
-  }],
-  enrolledUsers: [{
-    type: String,
-  }],
+  prerequisites: [String],
+  learningObjectives: [String],
+  problems: [Number],
+  modules: [Number],
+  enrolledUsers: [String],
   isPublic: {
-    type: Boolean,
-    default: true,
-  },
-  // Feature flag for QR/link enrollment
-  allowDirectEnrollment: {
     type: Boolean,
     default: false,
   },
@@ -88,14 +74,12 @@ const courseSchema = new mongoose.Schema<ICourseDocument>({
     type: Boolean,
     default: true,
   },
-  createdBy: {
-    type: String,
-    required: true,
+  createdBy: String,
+  tags: [String],
+  allowDirectEnrollment: { // Add the missing schema property
+    type: Boolean,
+    default: false,
   },
-  tags: [{
-    type: String,
-    trim: true,
-  }],
   rating: {
     type: Number,
     min: [0, 'Rating cannot be negative'],
@@ -124,18 +108,18 @@ courseSchema.index({ category: 1 });
 courseSchema.index({ difficulty: 1 });
 
 // Virtual for full name
-courseSchema.virtual('fullTitle').get(function() {
+courseSchema.virtual('fullTitle').get(function(this: ICourseDocument) {
   return `${this.title}${this.category ? ` - ${this.category}` : ''}`;
 });
 
 // Method to increment enrollment count
-courseSchema.methods.incrementEnrollment = async function() {
+courseSchema.methods.incrementEnrollment = async function(this: ICourseDocument) {
   this.enrollmentCount = (this.enrollmentCount || 0) + 1;
   return await this.save();
 };
 
 // Method to decrement enrollment count
-courseSchema.methods.decrementEnrollment = async function() {
+courseSchema.methods.decrementEnrollment = async function(this: ICourseDocument) {
   this.enrollmentCount = Math.max(0, (this.enrollmentCount || 0) - 1);
   return await this.save();
 };
@@ -145,9 +129,4 @@ courseSchema.statics.findByUserEnrollment = function(userId: string) {
   return this.find({ enrolledUsers: userId });
 };
 
-// Static method to find public courses
-courseSchema.statics.findPublic = function() {
-  return this.find({ isPublic: true });
-};
-
-export const Course = mongoose.model<ICourseDocument>('Course', courseSchema); 
+export const Course = mongoose.model<ICourseDocument>('Course', courseSchema);

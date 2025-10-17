@@ -1,23 +1,24 @@
 import type { Express, Response } from 'express';
 import { createServer, type Server } from 'http';
 
-import problemsRouter from './routes/problems';
-import submissionsRouter from './routes/submissions';
-import coursesRouter from './routes/courses';
-import modulesRouter from './routes/modules';
-import assignmentAnalyticsRoutes from './routes/assignmentAnalytics';
-import versionHistoryRoutes from './routes/versionHistory';
-import usersRouter from './routes/users';
-import contestsRouter from './routes/contests';
-import problemSetsRouter from './routes/problemSets';
-import adminRouter from './routes/admin';
-import assignmentsRouter from './routes/assignments';
-import { protect, requireAdmin } from './middleware/auth';
-import type { AuthRequest } from './middleware/auth';
-import { storage } from './storage';
-import { getDb } from './db';
-import { ProblemSetEnrollment } from './models/ProblemSetEnrollment';
-import { setupMaintenanceRoutes } from './middleware/maintenance';
+// FIX: Added .js extensions to all local/relative imports
+import problemsRouter from './routes/problems.js';
+import submissionsRouter from './routes/submissions.js';
+import coursesRouter from './routes/courses.js';
+import modulesRouter from './routes/modules.js';
+import assignmentAnalyticsRoutes from './routes/assignmentAnalytics.js';
+import versionHistoryRoutes from './routes/versionHistory.js';
+import usersRouter from './routes/users.js';
+import contestsRouter from './routes/contests.js';
+import problemSetsRouter from './routes/problemSets.js';
+import adminRouter from './routes/admin.js';
+import assignmentsRouter from './routes/assignments.js';
+import { protect, requireAdmin } from './middleware/auth.js';
+import type { AuthRequest } from './middleware/auth.js';
+import { storage } from './storage.js';
+import { getDb } from './db.js';
+import { ProblemSetEnrollment } from './models/ProblemSetEnrollment.js';
+import { setupMaintenanceRoutes } from './middleware/maintenance.js';
 import { ObjectId } from 'mongodb';
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -64,9 +65,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Alias route: problem sets with enrollment info for current user
   app.get('/api/problem-sets-with-enrollment', protect as any, (async (req: AuthRequest, res: Response) => {
     try {
-      const { ProblemSet } = await import('./models/ProblemSet');
-      const { ProblemSetEnrollment } = await import('./models/ProblemSetEnrollment');
-      const { getDb } = await import('./db');
+      const { ProblemSet } = await import('./models/ProblemSet.js');
+      const { ProblemSetEnrollment } = await import('./models/ProblemSetEnrollment.js');
+      const { getDb } = await import('./db.js');
       const userId = req.user?.id;
       const all = await ProblemSet.find({}).sort({ createdAt: -1 }).lean();
 

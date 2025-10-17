@@ -21,7 +21,7 @@ interface TestCaseResult {
 }
 
 export class ExecutionService {
-  private readonly TEMP_DIR = path.resolve(process.cwd(), '..', 'execution-system', 'temp');
+  private readonly TEMP_DIR = path.resolve('/tmp', 'execution-system-temp');
   private readonly FILE_EXTENSIONS: Record<string, string> = {
     'python': '.py',
     'javascript': '.js',

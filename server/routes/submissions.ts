@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { protect } from '../middleware/auth';
-import { listSubmissions, createSubmission, deleteSubmission } from '../controllers/submissionsController';
+import { protect } from '../middleware/auth.js';
+import { listSubmissions, createSubmission, deleteSubmission } from '../controllers/submissionsController.js';
 
 const router = Router();
 

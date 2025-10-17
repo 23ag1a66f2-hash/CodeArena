@@ -1,6 +1,6 @@
 import { ObjectId, Collection, Filter, UpdateFilter } from 'mongodb';
-import { getDb, connectToMongoDB } from './db';
-import { Submission } from './models/Submission';
+import { getDb, connectToMongoDB } from './db.js';
+import { Submission } from './models/Submission.js';
 
 // Problem Instance interface for isolated problem management
 export interface ProblemInstance {
@@ -2726,7 +2726,7 @@ export class MemStorage implements IStorage {
         await db.collection('problemSets').updateOne(
           { _id: problemSet._id },
           { 
-            $pull: { participants: userId },
+            $pull: { participants: userId } as any,
             $set: { updatedAt: new Date() }
           }
         );

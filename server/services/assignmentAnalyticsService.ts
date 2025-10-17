@@ -1,8 +1,8 @@
-import { Submission } from '../models/Submission';
-import { Problem } from '../models/Problem';
-import { User } from '../models/User';
-import { AssignmentAnalytics } from '../models/AssignmentAnalytics';
-import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment';
+import { Submission } from '../models/Submission.js';
+import { Problem } from '../models/Problem.js';
+import { User } from '../models/User.js';
+import { AssignmentAnalytics } from '../models/AssignmentAnalytics.js';
+import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment.js';
 import mongoose from 'mongoose';
 
 export interface AssignmentAnalyticsSummary {

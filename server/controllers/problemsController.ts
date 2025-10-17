@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
-import { storage } from '../storage';
-import { insertProblemSchema } from '../shared-schema';
+// FIX: Added .js extensions to all local/relative imports
+import type { AuthRequest } from '../middleware/auth.js';
+import { storage } from '../storage.js';
+import { insertProblemSchema } from '../shared-schema.js';
 import { z } from 'zod';
-import { executionServicePromise } from '../services/executionService';
+import { executionServicePromise } from '../services/executionService.js';
 
 export async function getProblems(req: Request, res: Response) {
   try {
