@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020"],
+    "outDir": "dist",
+    "rootDir": "..",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "..",
+    "paths": {
+      "@shared/*": ["shared/*"]
+    },
+    "useUnknownInCatchVariables": false,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": false,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": [
+    "index.ts",
+    "appRouter.ts",
+    "routes/**/*.ts",
+    "controllers/**/*.ts",
+    "services/**/*.ts",
+    "middleware/**/*.ts",
+    "models/**/*.ts",
+    "db.ts",
+    "vite.ts",
+    "../shared/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "routes.ts",
+    "routes.legacy.ts",
+    "storage-mongoose.ts",
+    "replitAuth.ts"
+  ]
+} 

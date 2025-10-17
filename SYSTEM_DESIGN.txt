@@ -1,0 +1,249 @@
+# CodeArena System Design Document
+
+## Project Overvieww
+
+CodeArena is a comprehensive online coding platform that provides competitive programming, educational courses, and assignment management capabilities. The system supports multiple programming languages, secure code execution, user management, and analytics.
+
+## System Architecture
+
+### High-Level Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend API   │    │   Execution     │
+│   (React + TS)  │◄──►│   (Express)     │◄──►│   System       │
+│                 │    │                 │    │   (Docker)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   MongoDB       │    │   Redis Queue   │    │   File Storage  │
+│   (Database)    │    │   (Job Queue)   │    │   (Code Files)  │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### Technology Stack
+
+#### Frontend
+- **Framework**: React 18.3.1 with TypeScript
+- **Build Tool**: Vite 5.4.14
+- **Styling**: Tailwind CSS 3.4.17
+- **State Management**: Zustand 5.0.5
+- **Data Fetching**: TanStack React Query 5.60.5
+- **UI Components**: Radix UI + Custom Components
+- **Code Editor**: Monaco Editor (VS Code's editor)
+- **Routing**: Wouter 3.3.5
+- **Forms**: React Hook Form 7.55.0
+- **Validation**: Zod 3.25.76
+
+#### Backend
+- **Runtime**: Node.js with TypeScript
+- **Framework**: Express.js 4.21.2
+- **Authentication**: Passport.js with JWT
+- **Database**: MongoDB with Mongoose 7.0.0
+- **Session Management**: Express Session
+- **Validation**: Express Validator + Zod
+- **Email**: Nodemailer 6.9.0
+- **Build Tool**: ESBuild
+
+#### Execution System
+- **Containerization**: Docker with Docker Compose
+- **Queue System**: Bull 4.12.0 with Redis
+- **Languages Supported**: Python, JavaScript, Java, C++, C
+- **Security**: Isolated containers for code execution
+
+#### Infrastructure
+- **Development**: Vite dev server integration
+- **Production**: Static file serving
+- **CORS**: Cross-origin resource sharing enabled
+- **Environment**: NODE_ENV based configuration
+
+## Core Components
+
+### 1. User Management System
+- **Authentication**: Local + Google OAuth2.0
+- **Authorization**: Role-based access control (Admin, User)
+- **User Profiles**: Personal information and preferences
+- **Session Management**: Secure session handling
+
+### 2. Course Management
+- **Course Structure**: Hierarchical module organization
+- **Enrollment System**: Student-course relationships
+- **Progress Tracking**: Module completion status
+- **Content Management**: Rich text and multimedia support
+
+### 3. Problem Management
+- **Problem Types**: Multiple programming challenges
+- **Test Cases**: Automated testing with real inputs
+- **Difficulty Levels**: Beginner to advanced
+- **Tags & Categories**: Organized problem discovery
+
+### 4. Assignment System
+- **Assignment Creation**: Admin-controlled problem sets
+- **Submission Management**: Code submission and grading
+- **Deadlines**: Time-based assignment constraints
+- **Analytics**: Performance tracking and insights
+
+### 5. Contest System
+- **Competitive Programming**: Timed coding competitions
+- **Leaderboards**: Real-time ranking systems
+- **Participation Management**: Contest enrollment
+- **Results & Analytics**: Performance metrics
+
+### 6. Code Execution Engine
+- **Multi-language Support**: Python, JS, Java, C++, C
+- **Secure Execution**: Docker container isolation
+- **Input/Output Handling**: Test case processing
+- **Resource Management**: Memory and time limits
+
+### 7. Analytics & Reporting
+- **User Performance**: Individual progress tracking
+- **Course Analytics**: Completion rates and metrics
+- **Assignment Insights**: Submission patterns
+- **Admin Dashboard**: Comprehensive system overview
+
+## Database Schema
+
+### Core Entities
+- **User**: Authentication, roles, preferences
+- **Course**: Structure, content, metadata
+- **Module**: Course subunits with content
+- **Problem**: Coding challenges with test cases
+- **Submission**: User code submissions
+- **ProblemSet**: Grouped problem collections
+- **Contest**: Competitive programming events
+- **Enrollment**: User-course/problem set relationships
+
+### Relationships
+- Users can enroll in multiple courses and problem sets
+- Courses contain multiple modules
+- Problem sets contain multiple problems
+- Submissions are linked to users and problems
+- Contests have participants and submissions
+
+## API Architecture
+
+### RESTful Endpoints
+- **Authentication**: `/api/auth/*`
+- **Users**: `/api/users/*`
+- **Courses**: `/api/courses/*`
+- **Problems**: `/api/problems/*`
+- **Submissions**: `/api/submissions/*`
+- **Assignments**: `/api/assignments/*`
+- **Contests**: `/api/contests/*`
+- **Admin**: `/api/admin/*`
+- **Analytics**: `/api/analytics/*`
+
+### Middleware Stack
+1. **CORS**: Cross-origin handling
+2. **Body Parsing**: JSON and URL-encoded data
+3. **Session Management**: User session handling
+4. **Authentication**: Passport.js integration
+5. **Activity Logging**: Admin action tracking
+6. **Error Handling**: Global error management
+
+## Security Features
+
+### Code Execution Security
+- **Container Isolation**: Docker containers for each execution
+- **Resource Limits**: Memory and CPU constraints
+- **Network Isolation**: Restricted network access
+- **File System Isolation**: Read-only execution environment
+
+### Application Security
+- **JWT Authentication**: Secure token-based auth
+- **Session Security**: Encrypted session storage
+- **Input Validation**: Zod schema validation
+- **Rate Limiting**: API abuse prevention
+- **CORS Protection**: Cross-origin security
+
+## Performance Considerations
+
+### Frontend Optimization
+- **Code Splitting**: Route-based lazy loading
+- **Bundle Optimization**: Vite build optimization
+- **State Management**: Efficient Zustand stores
+- **Query Caching**: React Query optimization
+
+### Backend Optimization
+- **Database Indexing**: MongoDB query optimization
+- **Caching**: Redis-based caching strategy
+- **Connection Pooling**: Database connection management
+- **Async Processing**: Queue-based job processing
+
+### Execution System
+- **Container Reuse**: Docker image optimization
+- **Queue Management**: Bull job queue optimization
+- **Resource Scaling**: Horizontal scaling capabilities
+
+## Deployment Architecture
+
+### Development Environment
+- **Local Development**: Vite dev server + Express API
+- **Hot Reloading**: Frontend and backend development
+- **Database**: Local MongoDB instance
+- **Docker**: Local execution system
+
+### Production Environment
+- **Static Assets**: Built frontend files
+- **API Server**: Node.js production server
+- **Database**: Production MongoDB cluster
+- **Execution System**: Production Docker environment
+- **Load Balancing**: Horizontal scaling support
+
+## Monitoring & Analytics
+
+### System Monitoring
+- **Performance Metrics**: Response times and throughput
+- **Error Tracking**: Application error logging
+- **Resource Usage**: CPU, memory, and disk monitoring
+- **User Analytics**: Usage patterns and engagement
+
+### Business Analytics
+- **Course Completion**: Learning outcome tracking
+- **Problem Solving**: Skill development metrics
+- **Contest Performance**: Competitive programming insights
+- **User Engagement**: Platform usage analytics
+
+## Future Enhancements
+
+### Scalability Improvements
+- **Microservices**: Service decomposition
+- **Message Queues**: Event-driven architecture
+- **CDN Integration**: Global content delivery
+- **Auto-scaling**: Kubernetes deployment
+
+### Feature Additions
+- **Real-time Collaboration**: Live coding sessions
+- **AI-powered Hints**: Intelligent problem assistance
+- **Mobile Applications**: Native mobile support
+- **Advanced Analytics**: Machine learning insights
+
+### Integration Capabilities
+- **LMS Integration**: Learning management systems
+- **Git Integration**: Version control integration
+- **CI/CD Integration**: Continuous integration support
+- **Third-party APIs**: External service integration
+
+## Technical Debt & Improvements
+
+### Code Quality
+- **TypeScript Migration**: Complete type coverage
+- **Testing Coverage**: Unit and integration tests
+- **Code Documentation**: API and component docs
+- **Linting & Formatting**: Consistent code style
+
+### Architecture Refactoring
+- **Service Layer**: Business logic separation
+- **Repository Pattern**: Data access abstraction
+- **Event System**: Decoupled component communication
+- **Configuration Management**: Environment-based configs
+
+### Performance Optimization
+- **Database Queries**: Query optimization and indexing
+- **Caching Strategy**: Multi-level caching
+- **Asset Optimization**: Image and bundle optimization
+- **CDN Implementation**: Global content delivery
+
+This system design provides a comprehensive overview of CodeArena's architecture, highlighting the key components, technologies, and considerations for building a robust, scalable coding platform. 

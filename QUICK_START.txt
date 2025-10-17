@@ -1,0 +1,265 @@
+# CodeArena Quick Start Guide
+
+## Prerequisites
+
+Before starting, ensure you have the following installed:
+- **Node.js** (v18 or higher)
+- **Docker Desktop** (for code execution)
+- **Git** (for version control)
+- **PowerShell 7** (Windows) or **Bash** (Linux/Mac)
+
+## Quick Setup (5 minutes)
+
+### 1. Clone and Install Dependencies
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd CodeArena
+
+# Install server dependencies
+cd server
+npm install
+
+# Install client dependencies
+cd ../client
+npm install
+
+# Install execution system dependencies
+cd ../execution-system
+npm install
+```
+
+### 2. Environment Configuration
+
+Create `.env` files in the `server` directory:
+
+```bash
+# server/.env
+NODE_ENV=development
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/codearena
+SESSION_SECRET=your-secret-key-here
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+```
+
+### 3. Start Development Environment
+
+#### Option A: Using PowerShell Scripts (Windows)
+```powershell
+# Start Docker services
+cd execution-system
+.\setup.ps1
+
+# Start the server (in a new terminal)
+cd server
+npm run dev
+
+# Start the client (in another terminal)
+cd client
+npm run dev
+```
+
+#### Option B: Manual Docker Setup
+```bash
+# Start MongoDB and Redis
+cd execution-system
+docker-compose up -d
+
+# Start the server
+cd server
+npm run dev
+
+# Start the client
+cd client
+npm run dev
+```
+
+### 4. Access the Application
+
+- **Frontend**: http://localhost:5000
+- **Backend API**: http://localhost:3000
+- **MongoDB**: mongodb://localhost:27017
+- **Redis**: localhost:6379
+
+## Development Workflow
+
+### Running the Application
+
+```bash
+# Terminal 1: Start server
+cd server
+npm run dev
+
+# Terminal 2: Start client
+cd client
+npm run dev
+
+# Terminal 3: Start execution system (if needed)
+cd execution-system
+docker-compose up
+```
+
+### Database Operations
+
+```bash
+# Access MongoDB shell
+docker exec -it execution-system-mongodb-1 mongosh
+
+# Reset database (if needed)
+cd server
+node seed-data.js
+```
+
+### Testing Code Execution
+
+```bash
+# Test Docker execution
+cd execution-system
+node test-docker-execution.js
+
+# Test specific language
+node test-docker-execution-simple.js
+```
+
+## Project Structure
+
+```
+CodeArena/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/    # UI components
+│   │   ├── pages/         # Page components
+│   │   ├── hooks/         # Custom React hooks
+│   │   └── lib/           # Utilities and configurations
+│   └── package.json
+├── server/                 # Express backend
+│   ├── controllers/        # Route handlers
+│   ├── models/            # MongoDB schemas
+│   ├── routes/            # API endpoints
+│   ├── middleware/        # Express middleware
+│   └── package.json
+├── execution-system/       # Docker execution environment
+│   ├── docker/            # Language-specific containers
+│   ├── queue/             # Job queue system
+│   └── docker-compose.yml
+└── shared/                 # Shared schemas and types
+```
+
+## Key Features to Test
+
+### 1. User Authentication
+- Register a new user
+- Login with credentials
+- Test Google OAuth (if configured)
+
+### 2. Course Management
+- Create a course as admin
+- Add modules to the course
+- Enroll students
+
+### 3. Problem Solving
+- Create a programming problem
+- Submit code solution
+- Test execution with Docker
+
+### 4. Assignment System
+- Create problem sets
+- Assign to students
+- Track submissions
+
+## Common Issues & Solutions
+
+### Docker Connection Issues
+```bash
+# Check Docker status
+docker info
+
+# Restart Docker Desktop
+# Ensure Docker service is running
+```
+
+### MongoDB Connection
+```bash
+# Check if MongoDB is running
+docker ps | grep mongodb
+
+# Reset MongoDB container
+cd execution-system
+docker-compose down
+docker-compose up -d
+```
+
+### Port Conflicts
+```bash
+# Check what's using port 3000
+netstat -ano | findstr :3000
+
+# Kill process or change port in .env
+PORT=3001
+```
+
+### Node Modules Issues
+```bash
+# Clear node modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Development Tips
+
+### 1. Hot Reloading
+- Frontend: Vite provides instant hot reloading
+- Backend: Use `tsx` for TypeScript hot reloading
+- Database: Changes require server restart
+
+### 2. Debugging
+- Use browser DevTools for frontend
+- Add `console.log` statements in backend
+- Use MongoDB Compass for database inspection
+
+### 3. Code Organization
+- Follow existing patterns in controllers and models
+- Use TypeScript interfaces for type safety
+- Keep components small and focused
+
+### 4. Testing
+- Test API endpoints with Postman or similar
+- Verify database operations
+- Test code execution with different languages
+
+## Next Steps
+
+1. **Explore the Codebase**: Familiarize yourself with the project structure
+2. **Set Up Your IDE**: Configure TypeScript and ESLint
+3. **Create Your First Feature**: Start with a simple CRUD operation
+4. **Join the Team**: Understand the development workflow and conventions
+
+## Getting Help
+
+- Check existing documentation in the `Documentations/` folder
+- Review the system design document (`SYSTEM_DESIGN.md`)
+- Examine the technical tasks (`TECH_TASKS.md`)
+- Look at existing code examples in controllers and components
+
+## Environment Variables Reference
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode | `development` |
+| `PORT` | Server port | `3000` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/codearena` |
+| `SESSION_SECRET` | Session encryption key | Required |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | Optional |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | Optional |
+| `SMTP_HOST` | Email server host | Optional |
+| `SMTP_PORT` | Email server port | `587` |
+| `SMTP_USER` | Email username | Optional |
+| `SMTP_PASS` | Email password | Optional |
+
+Happy coding! 🚀 

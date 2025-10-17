@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: execution-config
+  namespace: codearena-execution
+  labels:
+    app.kubernetes.io/name: codearena-execution
+    app.kubernetes.io/component: config
+data:
+  # Redis Configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  
+  # API Configuration
+  API_PORT: "3001"
+  CORS_ORIGIN: "*"
+  LOG_LEVEL: "info"
+  LOG_FORMAT: "json"
+  
+  # Worker Configuration
+  WORKER_CONCURRENCY: "5"
+  DOCKER_SOCKET_PATH: "/var/run/docker.sock"
+  
+  # Execution Limits
+  TIME_LIMIT: "10"
+  MEMORY_LIMIT: "128m"
+  OUTPUT_LIMIT: "64k"
+  COMPILE_TIME_LIMIT: "30"
+  MAX_CODE_SIZE: "65536"
+  MAX_INPUT_SIZE: "1024"
+  
+  # Container Configuration
+  CONTAINER_MEMORY_LIMIT: "128m"
+  CONTAINER_CPU_LIMIT: "0.5"
+  CONTAINER_PIDS_LIMIT: "64"
+  
+  # Docker Images
+  PYTHON_IMAGE: "codearena/python-executor:latest"
+  JS_IMAGE: "codearena/js-executor:latest"
+  C_IMAGE: "codearena/c-executor:latest"
+  CPP_IMAGE: "codearena/cpp-executor:latest"
+  JAVA_IMAGE: "codearena/java-executor:latest"
+  
+  # Health and Metrics
+  HEALTH_PORT: "3002"
+  METRICS_ENABLED: "true"
+  METRICS_PORT: "9090"
+  METRICS_PATH: "/metrics" 
