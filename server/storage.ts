@@ -2726,7 +2726,7 @@ export class MemStorage implements IStorage {
         await db.collection('problemSets').updateOne(
           { _id: problemSet._id },
           { 
-            $pull: { participants: userId },
+            $pull: { participants: userId } as any,
             $set: { updatedAt: new Date() }
           }
         );
