@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import type { AuthRequest } from '../middleware/auth';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 import { ProblemSet as ProblemSetModel } from '../models/ProblemSet';
 import { User } from '../models/User';
 import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment';
 import { connectToMongoDB } from '../db';
 import { storage } from '../storage';
 import { getDb } from '../db';
+
 
 function normalizeInstances(instances: any[] | undefined) {
   if (!Array.isArray(instances)) return [] as any[];
