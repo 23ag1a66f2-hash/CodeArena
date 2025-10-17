@@ -51,23 +51,34 @@ const config = {
 // Disable ETag to avoid 304 Not Modified responses on API
 app.set('etag', false);
 
-// CORS configuration
-const corsOrigins = config.corsOrigin.split(',').map(origin => origin.trim());
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (corsOrigins.includes(origin) || corsOrigins.includes('*')) {
-      return callback(null, true);
-    }
-    if (config.nodeEnv === 'development' && origin.includes('localhost')) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+// --- FIX: ROBUST CORS CONFIGURATION ---
+const allowedOrigins = [
+    'https://code-arena-taupe.vercel.app', // Your production frontend
+    'http://localhost:5000',               // For local development
+    'http://localhost:5173'                // Another common local dev port
+];
+
+const corsOptions = {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+        
+        // Check if the origin is in our whitelist
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
+
+app.use(cors(corsOptions));
+
+// Also, handle pre-flight requests for all routes
+app.options('*', cors(corsOptions));
 
 
 // Ensure API responses are never cached
