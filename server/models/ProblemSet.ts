@@ -1,7 +1,8 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IProblemInstance {
   _id?: mongoose.Types.ObjectId;
+  id?: string; // Add id to interface for consistency
   problemId: number;
   title?: string;
   description?: string;
@@ -20,6 +21,8 @@ export interface IProblemInstance {
   isCustomized: boolean;
   lastModified: Date;
   modifiedBy?: string;
+  selectedProblemId?: number; // Add missing properties
+  originalProblemId?: number; // Add missing properties
 }
 
 export interface IProblemSet {
@@ -36,17 +39,23 @@ export interface IProblemSet {
   totalProblems: number;
   createdBy: string;
   participants?: string[];
+  allowDirectEnrollment?: boolean; // Add missing property
   createdAt: Date;
   updatedAt: Date;
 }
 
-interface IProblemSetDocument extends Omit<IProblemSet, 'id'>, Document {
-  _id: mongoose.Types.ObjectId;
-  id: string;
+// Correctly define the document interface
+interface IProblemSetDocument extends IProblemSet, Document {
+  // Methods can be defined here if needed
+  removeProblem(problemId: number): Promise<this>;
+  addProblem(instance: IProblemInstance): Promise<this>;
+  updateProblemInstance(id: string, updates: Partial<IProblemInstance>): Promise<this>;
+  removeProblemInstance(id: string): Promise<this>;
+  reorderProblems(newOrder: number[]): Promise<this>;
 }
 
-const problemInstanceSchema = new mongoose.Schema({
- 
+// Define the problem instance schema separately for clarity
+const problemInstanceSchema = new Schema<IProblemInstance>({
   problemId: {
     type: Number,
     required: true,
@@ -63,47 +72,19 @@ const problemInstanceSchema = new mongoose.Schema({
     type: String,
     enum: ['easy', 'medium', 'hard'],
   },
-  customTestCases: [{
-    type: mongoose.Schema.Types.Mixed,
-  }],
-  customExamples: [{
-    type: mongoose.Schema.Types.Mixed,
-  }],
-  customStarterCode: {
-    type: mongoose.Schema.Types.Mixed,
-  },
-  timeLimit: {
-    type: Number,
-    min: [100, 'Time limit must be at least 100ms'],
-  },
-  memoryLimit: {
-    type: Number,
-    min: [16, 'Memory limit must be at least 16MB'],
-  },
-  hints: [{
-    type: String,
-    trim: true,
-  }],
-  constraints: {
-    type: String,
-    trim: true,
-  },
-  inputFormat: {
-    type: String,
-    trim: true,
-  },
-  outputFormat: {
-    type: String,
-    trim: true,
-  },
-  notes: {
-    type: String,
-    trim: true,
-  },
+  customTestCases: [mongoose.Schema.Types.Mixed],
+  customExamples: [mongoose.Schema.Types.Mixed],
+  customStarterCode: mongoose.Schema.Types.Mixed,
+  timeLimit: Number,
+  memoryLimit: Number,
+  hints: [String],
+  constraints: String,
+  inputFormat: String,
+  outputFormat: String,
+  notes: String,
   order: {
     type: Number,
     required: true,
-    min: [1, 'Order must be at least 1'],
   },
   isCustomized: {
     type: Boolean,
@@ -113,10 +94,9 @@ const problemInstanceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  modifiedBy: {
-    type: String,
-  },
+  modifiedBy: String,
 });
+
 
 const problemSetSchema = new mongoose.Schema<IProblemSetDocument>({
   id: {
@@ -126,7 +106,7 @@ const problemSetSchema = new mongoose.Schema<IProblemSetDocument>({
   },
   title: {
     type: String,
-    required: [true, 'Problem set title is required'],
+    required: true,
     trim: true,
   },
   description: {
@@ -135,101 +115,71 @@ const problemSetSchema = new mongoose.Schema<IProblemSetDocument>({
   },
   difficulty: {
     type: String,
-    required: [true, 'Problem set difficulty is required'],
-    trim: true,
+    required: true,
   },
   category: {
     type: String,
     trim: true,
   },
-  tags: [{
-    type: String,
-    trim: true,
-  }],
-  problemIds: [{
-    type: String,
-    required: true,
-  }],
-  problemInstances: [problemInstanceSchema],
+  tags: [String],
+  problemIds: [String],
+  problemInstances: [problemInstanceSchema], // Use the defined sub-schema
   isPublic: {
-    type: Boolean,
-    default: true,
-  },
-  // Feature flag: allow direct enrollment via QR/link
-  allowDirectEnrollment: {
     type: Boolean,
     default: false,
   },
-  estimatedTime: {
-    type: Number,
-    min: [1, 'Estimated time must be at least 1 minute'],
-  },
+  estimatedTime: Number,
   totalProblems: {
     type: Number,
     default: 0,
-    min: [0, 'Total problems cannot be negative'],
   },
   createdBy: {
     type: String,
     required: true,
   },
-  participants: [{
-    type: String,
-    index: true,
-    default: undefined,
-  }],
+  participants: [String],
+  allowDirectEnrollment: { // Add the missing schema property
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
 });
 
-// Indexes for efficient queries
-// problemSetSchema.index({ id: 1 });
+// Index for efficient queries
+problemSetSchema.index({ id: 1 });
 problemSetSchema.index({ createdBy: 1 });
 problemSetSchema.index({ isPublic: 1 });
-problemSetSchema.index({ difficulty: 1 });
 problemSetSchema.index({ category: 1 });
+problemSetSchema.index({ difficulty: 1 });
 
-// Virtual for problem set complexity
-problemSetSchema.virtual('complexity').get(function() {
-  if (!this.problemInstances || this.problemInstances.length === 0) {
-    return this.difficulty;
-  }
-  
-  const difficulties = this.problemInstances.map(p => p.difficulty).filter(Boolean);
-  if (difficulties.length === 0) return this.difficulty;
-  
-  const difficultyCounts = difficulties.reduce((acc, diff) => {
-    if (diff) {
-      acc[diff] = (acc[diff] || 0) + 1;
-    }
-    return acc;
-  }, {} as Record<string, number>);
-  
-  const maxCount = Math.max(...Object.values(difficultyCounts));
-  const dominantDifficulty = Object.keys(difficultyCounts).find(diff => 
-    difficultyCounts[diff as keyof typeof difficultyCounts] === maxCount
-  );
-  
-  return dominantDifficulty || this.difficulty;
-});
-
-// Method to add problem instance
-problemSetSchema.methods.addProblemInstance = async function(problemInstance: IProblemInstance) {
-  this.problemInstances.push(problemInstance);
+// Method to add a problem to the problem set
+problemSetSchema.methods.addProblem = async function(instance: IProblemInstance) {
+  this.problemInstances.push(instance);
   this.totalProblems = this.problemInstances.length;
   return await this.save();
 };
 
-// Method to remove problem instance by problemId
-problemSetSchema.methods.removeProblemInstance = async function(problemId: number) {
+// Method to remove a problem from the problem set
+problemSetSchema.methods.removeProblem = async function(problemId: number) {
   this.problemInstances = this.problemInstances.filter((p: IProblemInstance) => p.problemId !== problemId);
   this.totalProblems = this.problemInstances.length;
   return await this.save();
 };
 
-// Method to remove problem instance by subdocument _id
-problemSetSchema.methods.removeProblemInstanceBySubId = async function(instanceId: string | mongoose.Types.ObjectId) {
-  const idStr = instanceId.toString();
+// Method to update a problem instance within the problem set
+problemSetSchema.methods.updateProblemInstance = async function(id: string, updates: Partial<IProblemInstance>) {
+  const instance = this.problemInstances.find((p: IProblemInstance) => p._id?.toString() === id);
+  if (instance) {
+    Object.assign(instance, updates, { lastModified: new Date() });
+    return await this.save();
+  }
+  throw new Error('Problem instance not found');
+};
+
+// Method to remove a problem instance from the problem set
+problemSetSchema.methods.removeProblemInstance = async function(id: string) {
+  const idStr = id.toString();
   this.problemInstances = this.problemInstances.filter((p: IProblemInstance) => p._id?.toString() !== idStr);
   this.totalProblems = this.problemInstances.length;
   return await this.save();
@@ -246,7 +196,7 @@ problemSetSchema.methods.reorderProblems = async function(newOrder: number[]) {
     return null;
   }).filter(Boolean);
   
-  this.problemInstances = reorderedInstances;
+  this.problemInstances = reorderedInstances as IProblemInstance[];
   return await this.save();
 };
 
@@ -277,4 +227,21 @@ problemSetSchema.statics.getStats = async function() {
   return stats;
 };
 
-export const ProblemSet = mongoose.model<IProblemSetDocument>('ProblemSet', problemSetSchema); 
+// Calculate average difficulty
+problemSetSchema.virtual('averageDifficulty').get(function(this: IProblemSetDocument) {
+  if (!this.problemInstances || this.problemInstances.length === 0) {
+    return 'N/A';
+  }
+  const difficultyMap: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+  const totalDifficulty = this.problemInstances
+    .map((p: any) => difficultyMap[p.difficulty] || 0) // Add explicit type
+    .reduce((acc: number, diff: number) => acc + diff, 0); // Add explicit types
+  
+  const avg = totalDifficulty / this.problemInstances.length;
+  
+  if (avg <= 1.5) return 'Easy';
+  if (avg <= 2.5) return 'Medium';
+  return 'Hard';
+});
+
+export const ProblemSet = mongoose.model<IProblemSetDocument>('ProblemSet', problemSetSchema);
