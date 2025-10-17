@@ -44,8 +44,8 @@ export interface IProblemSet {
   updatedAt: Date;
 }
 
-// Correctly define the document interface
-interface IProblemSetDocument extends IProblemSet, Document {
+// FIX: Extend IProblemSet and an Omitted Document type to resolve the 'id' conflict.
+interface IProblemSetDocument extends IProblemSet, Omit<Document, 'id'> {
   // Methods can be defined here if needed
   removeProblem(problemId: number): Promise<this>;
   addProblem(instance: IProblemInstance): Promise<this>;
