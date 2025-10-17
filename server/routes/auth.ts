@@ -54,7 +54,7 @@ const validateRegistration = [
       throw new Error('Password must contain at least one lowercase letter (a-z)');
     }
     // Check for at least one digit
-    if (!/\d]/.test(value)) {
+    if (!/\d/.test(value)) {
       throw new Error('Password must contain at least one digit (0-9)');
     }
     // Check for at least one special character
