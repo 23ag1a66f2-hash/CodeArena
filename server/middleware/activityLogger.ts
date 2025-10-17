@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import type { AuthRequest } from './auth.js';
 import { logAdminAction } from '../services/adminActivityLogger.js';
-import { storage } from '../storage';
+import { storage } from '../storage.js';
 
 export function activityLogger() {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {
