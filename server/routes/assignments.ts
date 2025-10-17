@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
-import { protect } from '../middleware/auth';
-import type { AuthRequest } from '../middleware/auth';
-import { storage } from '../storage';
+import { protect } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
+import { storage } from '../storage.js';
 
 const router = Router();
 

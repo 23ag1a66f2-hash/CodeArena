@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
-import { User } from '../models/User';
-import { Problem } from '../models/Problem';
-import { Submission } from '../models/Submission';
+import type { AuthRequest } from '../middleware/auth.js';
+import { User } from '../models/User.js';
+import { Problem } from '../models/Problem.js';
+import { Submission } from '../models/Submission.js';
 import crypto from 'crypto';
 
 export async function listUsers(req: AuthRequest, res: Response) {

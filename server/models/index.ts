@@ -1,27 +1,27 @@
-// Export all Mongoose models
-export { User } from './User';
-export { Course } from './Course';
-export { CourseModule } from './CourseModule';
-export { CourseEnrollment } from './CourseEnrollment';
-export { Problem } from './Problem';
-export { Submission } from './Submission';
-export { ProblemSet } from './ProblemSet';
-export { ProblemSetEnrollment } from './ProblemSetEnrollment';
-export { ModuleProgress } from './ModuleProgress';
-export { VersionHistory } from './VersionHistory';
-export { Contest } from './Contest';
-export { ContestParticipant } from './ContestParticipant';
-export { ContestSubmission } from './ContestSubmission';
-export { ContestQuestion } from './ContestQuestion';
+// Export all Mongoose models with .js extension
+export { User } from './User.js';
+export { Course } from './Course.js';
+export { CourseModule } from './CourseModule.js';
+export { CourseEnrollment } from './CourseEnrollment.js';
+export { Problem } from './Problem.js';
+export { Submission } from './Submission.js';
+export { ProblemSet } from './ProblemSet.js';
+export { ProblemSetEnrollment } from './ProblemSetEnrollment.js';
+export { ModuleProgress } from './ModuleProgress.js';
+export { VersionHistory } from './VersionHistory.js';
+export { Contest } from './Contest.js';
+export { ContestParticipant } from './ContestParticipant.js';
+export { ContestSubmission } from './ContestSubmission.js';
+export { ContestQuestion } from './ContestQuestion.js';
 
-// Export interfaces
-export type { IUser } from './User';
-export type { ICourse } from './Course';
-export type { ICourseModule } from './CourseModule';
-export type { ICourseEnrollment } from './CourseEnrollment';
+// Export interfaces with .js extension
+export type { IUser } from './User.js';
+export type { ICourse } from './Course.js';
+export type { ICourseModule } from './CourseModule.js';
+export type { ICourseEnrollment } from './CourseEnrollment.js';
 // Note: Problem model does not export TS interfaces
-export type { ISubmission } from './Submission';
-export type { IProblemSet, IProblemInstance } from './ProblemSet';
-export type { IProblemSetEnrollment } from './ProblemSetEnrollment';
-export type { IModuleProgress } from './ModuleProgress';
-export type { IVersionHistory } from './VersionHistory'; 
+export type { ISubmission } from './Submission.js';
+export type { IProblemSet, IProblemInstance } from './ProblemSet.js';
+export type { IProblemSetEnrollment } from './ProblemSetEnrollment.js';
+export type { IModuleProgress } from './ModuleProgress.js';
+export type { IVersionHistory } from './VersionHistory.js';

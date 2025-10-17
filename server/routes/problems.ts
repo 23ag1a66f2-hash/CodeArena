@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { protect, requireAdmin } from '../middleware/auth';
-import type { AuthRequest } from '../middleware/auth';
+import { protect, requireAdmin } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
 import {
   getProblems,
   getProblemById,
@@ -10,10 +10,10 @@ import {
   deleteProblem,
   runProblemCode,
   runProblemCodeWithCustomInput,
-} from '../controllers/problemsController';
+} from '../controllers/problemsController.js';
 
 // Import execution service for cleanup
-import executionService from '../services/executionService';
+import executionService from '../services/executionService.js';
 
 const router = Router();
 

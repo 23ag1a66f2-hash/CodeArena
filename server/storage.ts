@@ -1,6 +1,6 @@
 import { ObjectId, Collection, Filter, UpdateFilter } from 'mongodb';
-import { getDb, connectToMongoDB } from './db';
-import { Submission } from './models/Submission';
+import { getDb, connectToMongoDB } from './db.js';
+import { Submission } from './models/Submission.js';
 
 // Problem Instance interface for isolated problem management
 export interface ProblemInstance {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User';
-import { MaintenanceConfig } from '../models/MaintenanceConfig';
+import { User } from '../models/User.js';
+import { MaintenanceConfig } from '../models/MaintenanceConfig.js';
 import mongoose from 'mongoose';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';

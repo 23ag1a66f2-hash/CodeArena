@@ -1,5 +1,5 @@
-import type { AuthRequest } from '../middleware/auth';
-import { VersionHistory } from '../models/VersionHistory';
+import type { AuthRequest } from '../middleware/auth.js';
+import { VersionHistory } from '../models/VersionHistory.js';
 
 interface LogParams {
   action: string;

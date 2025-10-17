@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { connectToMongoDB, closeMongoDB } from '../db';
+import { connectToMongoDB, closeMongoDB } from '../db.js';
 
 async function run() {
   const db = await connectToMongoDB();

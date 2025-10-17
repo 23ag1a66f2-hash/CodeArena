@@ -1,11 +1,11 @@
 // @ts-nocheck
 
 import { ObjectId } from 'mongodb';
-import { Contest as ContestModel } from '../models/Contest';
-import { ContestParticipant as ContestParticipantModel } from '../models/ContestParticipant';
-import { ContestSubmission as ContestSubmissionModel } from '../models/ContestSubmission';
-import { ContestQuestion as ContestQuestionModel } from '../models/ContestQuestion';
-import { Problem } from '../models/Problem';
+import { Contest as ContestModel } from '../models/Contest.js';
+import { ContestParticipant as ContestParticipantModel } from '../models/ContestParticipant.js';
+import { ContestSubmission as ContestSubmissionModel } from '../models/ContestSubmission.js';
+import { ContestQuestion as ContestQuestionModel } from '../models/ContestQuestion.js';
+import { Problem } from '../models/Problem.js';
 import type {
   Contest as ContestType,
   ContestProblem,
@@ -13,7 +13,7 @@ import type {
   ContestQuestion as ContestQuestionType,
   ContestAnalytics,
   ContestLeaderboardEntry,
-} from '../shared-schema';
+} from '../shared-schema.js';
 
 // Contest document interfaces for MongoDB
 export interface ContestDocument extends Omit<ContestType, '_id'> {

@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
-import { protect } from '../middleware/auth';
-import type { AuthRequest } from '../middleware/auth';
+import { protect } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
 import {
   listProblemSets,
   getProblemSetById,
@@ -13,12 +13,12 @@ import {
   listProblemSetEnrollments,
   enrollUserInProblemSet,
   removeUserFromProblemSet,
-} from '../controllers/problemSetsController';
-import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment';
+} from '../controllers/problemSetsController.js';
+import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment.js';
 import QRCode from 'qrcode';
-import { ProblemSet } from '../models/ProblemSet';
-import { getDb } from '../db';
-import { storage } from '../storage';
+import { ProblemSet } from '../models/ProblemSet.js';
+import { getDb } from '../db.js';
+import { storage } from '../storage.js';
 import mongoose from 'mongoose';
 
 const router = Router();

@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { AssignmentAnalyticsService } from '../services/assignmentAnalyticsService';
-import { AssignmentAnalytics } from '../models/AssignmentAnalytics';
-import { Submission } from '../models/Submission';
-import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment';
+import { AssignmentAnalyticsService } from '../services/assignmentAnalyticsService.js';
+import { AssignmentAnalytics } from '../models/AssignmentAnalytics.js';
+import { Submission } from '../models/Submission.js';
+import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment.js';
 import mongoose from 'mongoose';
-import { protect, requireAdmin } from '../middleware/auth';
-import { AuthRequest } from '../middleware/auth';
+import { protect, requireAdmin } from '../middleware/auth.js';
+import { AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
 

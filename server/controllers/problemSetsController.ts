@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
+import type { AuthRequest } from '../middleware/auth.js';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
-import { ProblemSet as ProblemSetModel } from '../models/ProblemSet';
-import { User } from '../models/User';
-import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment';
-import { connectToMongoDB } from '../db';
-import { storage } from '../storage';
-import { getDb } from '../db';
+import { ProblemSet as ProblemSetModel } from '../models/ProblemSet.js';
+import { User } from '../models/User.js';
+import { ProblemSetEnrollment } from '../models/ProblemSetEnrollment.js';
+import { connectToMongoDB } from '../db.js';
+import { storage } from '../storage.js';
+import { getDb } from '../db.js';
 
 
 function normalizeInstances(instances: any[] | undefined) {

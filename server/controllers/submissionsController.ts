@@ -1,9 +1,9 @@
 import { Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
-import executionService from '../services/executionService';
-import { Submission } from '../models/Submission';
-import { Problem as ProblemModel } from '../models/Problem';
-import { ProblemSet } from '../models/ProblemSet';
+import type { AuthRequest } from '../middleware/auth.js';
+import executionService from '../services/executionService.js';
+import { Submission } from '../models/Submission.js';
+import { Problem as ProblemModel } from '../models/Problem.js';
+import { ProblemSet } from '../models/ProblemSet.js';
 import mongoose from 'mongoose';
 
 export async function listSubmissions(req: AuthRequest, res: Response) {

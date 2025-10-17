@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { getCurrentGmailConfig, GMAIL_SCOPES } from '../config/gmail';
+import { getCurrentGmailConfig, GMAIL_SCOPES } from '../config/gmail.js';
 
 export class GmailService {
   private gmail: any;

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import type { AuthRequest } from '../middleware/auth';
+import type { AuthRequest } from '../middleware/auth.js';
 import { z } from 'zod';
-import { insertCourseModuleSchema } from '../shared-schema';
-import { CourseModule } from '../models/CourseModule';
-import { executionServicePromise } from '../services/executionService';
-import { storage } from '../storage';
+import { insertCourseModuleSchema } from '../shared-schema.js';
+import { CourseModule } from '../models/CourseModule.js';
+import { executionServicePromise } from '../services/executionService.js';
+import { storage } from '../storage.js';
 
 export async function getModuleById(req: Request, res: Response) {
   try {

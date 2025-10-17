@@ -1,8 +1,8 @@
 import { Router, Request, Response, RequestHandler } from 'express';
-import { storage } from "../storage";
-import { protect } from "../middleware/auth";
-import { requireAdmin } from '../middleware/auth';
-import { listUsers, updateUserRole } from '../controllers/adminController';
+import { storage } from "../storage.js";
+import { protect } from "../middleware/auth.js";
+import { requireAdmin } from '../middleware/auth.js';
+import { listUsers, updateUserRole } from '../controllers/adminController.js';
 
 interface AuthUser {
   id: string;

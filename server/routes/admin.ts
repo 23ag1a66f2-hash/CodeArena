@@ -1,12 +1,12 @@
 import { Router, Request, Response } from 'express';
-import { protect, requireAdmin } from '../middleware/auth';
-import type { AuthRequest } from '../middleware/auth';
-import { storage } from '../storage';
-import { connectToMongoDB } from '../db';
-import { listUsers, updateUserRole, analyticsSummary, createUser, deleteUser } from '../controllers/adminController';
-import { Submission } from '../models/Submission';
-import { User } from '../models/User';
-import { Problem } from '../models/Problem';
+import { protect, requireAdmin } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
+import { storage } from '../storage.js';
+import { connectToMongoDB } from '../db.ts';
+import { listUsers, updateUserRole, analyticsSummary, createUser, deleteUser } from '../controllers/adminController.js';
+import { Submission } from '../models/Submission.js';
+import { User } from '../models/User.js';
+import { Problem } from '../models/Problem.js';
 import mongoose from 'mongoose';
 
 const router = Router();

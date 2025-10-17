@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { User } from '../models/User';
+import { User } from '../models/User.js';
 
 interface OTPData {
   email: string;
