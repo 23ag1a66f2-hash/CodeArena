@@ -2,13 +2,14 @@
 import { Router, Request, Response } from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User, IUser } from '../models/User';
-import { generateToken, protect, AuthRequest } from '../middleware/auth';
+// FIX: Added .js extensions to all local/relative imports
+import { User, IUser } from '../models/User.js';
+import { generateToken, protect, AuthRequest } from '../middleware/auth.js';
 import { body, validationResult } from 'express-validator';
 import { Document, Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { otpService } from '../services/otpService';
-import { gmailService } from '../services/gmailService';
+import { otpService } from '../services/otpService.js';
+import { gmailService } from '../services/gmailService.js';
 import { configDotenv } from 'dotenv';
 
 configDotenv();
@@ -53,7 +54,7 @@ const validateRegistration = [
       throw new Error('Password must contain at least one lowercase letter (a-z)');
     }
     // Check for at least one digit
-    if (!/\d/.test(value)) {
+    if (!/\d]/.test(value)) {
       throw new Error('Password must contain at least one digit (0-9)');
     }
     // Check for at least one special character
@@ -489,7 +490,7 @@ router.post('/verify-otp-reset-password', async (req: Request, res: Response) =>
     if (!/[a-z]/.test(newPassword)) {
       return res.status(400).json({ message: 'Password must contain at least one lowercase letter (a-z)' });
     }
-    if (!/\d/.test(newPassword)) {
+    if (!/\d]/.test(newPassword)) {
       return res.status(400).json({ message: 'Password must contain at least one digit (0-9)' });
     }
     if (!/[!@#$%^&*()\-_=+[\]{};:'",.<>?/|\\]/.test(newPassword)) {
@@ -718,4 +719,4 @@ router.get('/debug/users-profile-images', async (req: Request, res: Response) =>
   }
 });
 
-export default router; 
+export default router;
