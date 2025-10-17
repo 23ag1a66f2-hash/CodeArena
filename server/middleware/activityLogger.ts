@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
-import type { AuthRequest } from './auth';
-import { logAdminAction } from '../services/adminActivityLogger';
+import type { AuthRequest } from './auth.js';
+import { logAdminAction } from '../services/adminActivityLogger.js';
 import { storage } from '../storage';
 
 export function activityLogger() {
