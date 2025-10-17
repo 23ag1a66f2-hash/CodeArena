@@ -32,7 +32,8 @@ router.post('/cleanup', protect as any, async (req, res) => {
     console.log('[PROBLEMS-ROUTE] 🧹 Manual cleanup requested');
     
     // Call the public cleanup method
-    await executionService.cleanupAllTempFiles();
+    const service = await executionService;
+    await service.cleanupAllTempFiles();
     
     res.json({ 
       status: 'success',
