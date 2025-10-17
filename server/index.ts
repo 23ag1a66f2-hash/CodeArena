@@ -1,14 +1,15 @@
 import express from "express";
-import { registerRoutes } from "./appRouter";
-import { setupVite, serveStatic, log } from "./viteIntegration";
-import { connectToMongoDB, dbHealthCheck } from "./db";
-import { MaintenanceConfig } from "./models/MaintenanceConfig";
-import authRoutes from "./routes/auth";
+// FIX: Added .js extensions to all local/relative imports
+import { registerRoutes } from "./appRouter.js";
+import { setupVite, serveStatic, log } from "./viteIntegration.js";
+import { connectToMongoDB, dbHealthCheck } from "./db.js";
+import { MaintenanceConfig } from "./models/MaintenanceConfig.js";
+import authRoutes from "./routes/auth.js";
 import passport from "passport";
 import session from "express-session";
 import cors from "cors";
 import { Request, Response, NextFunction } from "express";
-import { activityLogger } from './middleware/activityLogger';
+import { activityLogger } from './middleware/activityLogger.js';
 import dotenv from "dotenv";
 dotenv.config();
 // Load environment variables
@@ -63,7 +64,7 @@ app.use(cors({
     }
     return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true, // --- FIX: This is now always true
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
@@ -149,7 +150,7 @@ app.use('/api/auth', (req, res, next) => {
 app.use('/auth', authRoutes); // Backward compatibility
 
 // Activity logger
-app.use(activityLogger());
+app.use(activityLogger);
 
 // --- MAIN ASYNC BOOTSTRAP ---
 (async () => {
@@ -199,7 +200,8 @@ app.use(activityLogger());
     console.log('✅ MongoDB connected successfully');
 
     // Initialize maintenance mode configuration
-    const { initializeMaintenanceAfterDB } = await import('./middleware/maintenance');
+    // FIX: Added .js extension
+    const { initializeMaintenanceAfterDB } = await import('./middleware/maintenance.js');
     await initializeMaintenanceAfterDB();
     console.log('✅ Maintenance configuration initialized');
 
