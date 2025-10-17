@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+// FIX: Added .js extensions to all local/relative imports
 import type { AuthRequest } from '../middleware/auth.js';
 import { storage } from '../storage.js';
 import { insertProblemSchema } from '../shared-schema.js';
