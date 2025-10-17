@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { protect } from '../middleware/auth';
 import type { AuthRequest } from '../middleware/auth';
 import {
@@ -126,7 +126,7 @@ router.get('/:id/overall-analytics', protect as any, (async (req: AuthRequest, r
 }) as any);
 
 // Manage enrollments by enrollment id
-router.delete('/enrollments/:enrollmentId', protect as any, (async (req: AuthRequest, res) => {
+router.delete('/enrollments/:enrollmentId', protect as any, (async (req: AuthRequest, res: Response) => {
   try {
     if (req.user?.role !== 'admin') return res.status(403).json({ message: 'Admin access required' });
     const enrollmentId = parseInt(req.params.enrollmentId);
@@ -146,7 +146,7 @@ router.delete('/enrollments/:enrollmentId', protect as any, (async (req: AuthReq
 
 // Fetch a specific problem instance from a problem set, merged with original problem data
 // This enables solving assignment problems with per-instance overrides
-router.get('/:setId/problems/:instanceId', protect as any, (async (req, res) => {
+router.get('/:setId/problems/:instanceId', protect as any, (async (req: AuthRequest, res: Response) => {
   try {
     const { setId, instanceId } = req.params as { setId: string; instanceId: string };
 
@@ -211,7 +211,7 @@ router.get('/:setId/problems/:instanceId', protect as any, (async (req, res) => 
   }
 }) as any);
 
-router.patch('/enrollments/:enrollmentId', protect as any, (async (req: AuthRequest, res) => {
+router.patch('/enrollments/:enrollmentId', protect as any, (async (req: AuthRequest, res: Response) => {
   try {
     if (req.user?.role !== 'admin') return res.status(403).json({ message: 'Admin access required' });
     const enrollmentId = parseInt(req.params.enrollmentId);
@@ -225,7 +225,7 @@ router.patch('/enrollments/:enrollmentId', protect as any, (async (req: AuthRequ
 }) as any);
 
 // Generate QR code to enroll in a problem set (assignment)
-router.get('/:id/qr-code', protect as any, (async (req: AuthRequest, res) => {
+router.get('/:id/qr-code', protect as any, (async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     // Check flag to allow QR enrollment
@@ -247,7 +247,7 @@ router.get('/:id/qr-code', protect as any, (async (req: AuthRequest, res) => {
 }) as any);
 
 // Student self-enroll via link/QR (respects allowDirectEnrollment)
-router.post('/:id/self-enroll', protect as any, (async (req: AuthRequest, res) => {
+router.post('/:id/self-enroll', protect as any, (async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
@@ -474,4 +474,4 @@ router.post('/:id/refresh-analytics', protect as any, (async (req: AuthRequest, 
   }
 }) as any);
 
-export default router; 
+export default router;
