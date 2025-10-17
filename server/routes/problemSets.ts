@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { protect } from '../middleware/auth';
 import type { AuthRequest } from '../middleware/auth';
 import {
