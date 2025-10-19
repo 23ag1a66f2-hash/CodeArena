@@ -68,6 +68,7 @@ import ContestDetailsPage from "@/pages/contest-details";
 import ContestProblemsPage from "@/pages/contest-problems";
 import ContestLeaderboardPage from "@/pages/contest-leaderboard";
 import ContestResultsPage from "@/pages/contest-results";
+import { FullScreenProvider } from "@/hooks/useFullScreen"; // --- 1. IMPORT THE PROVIDER ---
 
 function AppContent() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -366,7 +367,10 @@ function App() {
         <MaintenanceModeProvider>
           <GlobalMaintenanceEnforcer>
             <TooltipProvider>
-              <AppContent />
+              {/* --- 2. WRAP APPCONTENT WITH THE PROVIDER --- */}
+              <FullScreenProvider>
+                <AppContent />
+              </FullScreenProvider>
               <EnhancedToaster />
             </TooltipProvider>
           </GlobalMaintenanceEnforcer>
